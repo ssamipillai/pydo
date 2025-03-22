@@ -51,7 +51,7 @@ def print_task_report(
         task_selector.task_filter.pop("type")
 
     # Fill up the report with the selected tasks
-    tasks = repo.search(task_selector.task_filter, [task_selector.model])
+    tasks = repo.search(task_selector.task_filter, task_selector.model)
     for task in sort_tasks(tasks, sort_criteria):
         entity_line = []
         for attribute in columns:

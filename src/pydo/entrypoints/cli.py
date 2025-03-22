@@ -3,10 +3,10 @@
 import logging
 import sys
 from typing import Any, Optional, Tuple
-
 import click
 from click.core import Context
 from click_default_group import DefaultGroup
+
 from pydantic import ValidationError
 from repository_orm import EntityNotFoundError
 
@@ -30,7 +30,7 @@ log = logging.getLogger(__name__)
 @click.option(
     "-c",
     "--config_path",
-    default="~/.local/share/pydo/config.yaml",
+    default="C:/Code/pydo/assets/config.yaml",
     help="configuration file path",
     envvar="PYDO_CONFIG_PATH",
 )

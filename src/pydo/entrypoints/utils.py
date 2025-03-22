@@ -37,6 +37,7 @@ def load_config(config_path: str) -> Config:
 
         config_path = os.path.join(data_directory, "config.yaml")
         if not os.path.isfile(config_path) or not os.access(config_path, os.R_OK):
+            print(config_path)
             shutil.copyfile("assets/config.yaml", config_path)
             log.info("Copied default configuration template")
 
@@ -49,7 +50,7 @@ def load_config(config_path: str) -> Config:
 def get_repo(config: Config) -> Repository:
     """Configure the Repository."""
     log.debug("Initializing the repository")
-    repo = load_repository([Task, RecurrentTask], config["database_url"])
+    repo = load_repository(config["database_url"])
 
     return repo
 

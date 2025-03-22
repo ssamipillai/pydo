@@ -35,7 +35,7 @@ def add_task(repo: Repository, change: TaskChanges) -> Union[RecurrentTask, Task
         child_task = repo.add(task.breed_children())
 
         log.info(
-            f"Added {task.recurrence_type} task {task.id_}:" f" {task.description}"
+            f"Added {task.recurrence_type} task {task.id_}: {task.description}"
         )
         log.info(f"Added first child task with id {child_task.id_}")
     else:
@@ -104,20 +104,13 @@ def _close_tasks(
 def _tasks_from_selector(repo: Repository, selector: TaskSelector) -> List[TaskType]:
     """Return the tasks that match the criteria of the task selector."""
     tasks: List[TaskType] = [
-        repo.get(task_id, [selector.model]) for task_id in selector.task_ids
+        repo.get(task_id, selector.model) for task_id in selector.task_ids
     ]
 
-    if selector.task_filter != {}:
-        # Remove the tasks that don't meet the task_filter
-        for task in tasks:
-            # Check if the task_filter is not a subset of the properties of the task.
-            # SIM205: Use 'selector.task_filter.items() > task.dict().items()' instead
-            # No can't do, if we do, the subset checking doesn't work
-            if not selector.task_filter.items() <= task.dict().items():  # noqa: SIM205
-                tasks.remove(task)
-
+    # Only search by filter if no task IDs were specified
+    if not selector.task_ids and selector.task_filter != {}:
         with suppress(EntityNotFoundError):
-            tasks.extend(repo.search(selector.task_filter, [selector.model]))
+            tasks.extend(repo.search(selector.task_filter, selector.model))
 
     # Remove duplicates
     return list(set(tasks))
